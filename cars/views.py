@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, CreateView, DetailView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 
 from cars.models import Car
 from cars.forms import CarModelForm
@@ -29,18 +31,20 @@ class CarDetailView(DetailView):
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
-class NewCarCreateView(CreateView):
+class NewCarCreateView(SuccessMessageMixin, CreateView):
     model = Car
     form_class = CarModelForm
     template_name = 'new_car.html'
     success_url = '/cars/'
+    success_message = 'Carro cadastrado com sucesso!'
 
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
-class CarUpdateView(UpdateView):
+class CarUpdateView(SuccessMessageMixin, UpdateView):
     model = Car
     form_class = CarModelForm
     template_name = 'car_update.html'
+    success_message = 'Carro atualizado com sucesso!'
 
     def get_success_url(self):
         return reverse_lazy('car_detail', kwargs={'pk': self.object.pk})
@@ -51,3 +55,8 @@ class CarDeleteView(DeleteView):
     model = Car
     template_name = 'car_delete.html'
     success_url = '/cars/'
+    success_message = 'Carro excluído com sucesso!'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, self.success_message)
+        return super().delete(request, *args, **kwargs)
