@@ -5,8 +5,8 @@ Sistema de cadastro de carros com marcas, ano de fabricacao, ano do modelo, plac
 ## Tecnologias
 
 - Python 3
-- Django 3.2
-- SQLite (banco de dados local)
+- Django 6.0
+- PostgreSQL (banco de dados)
 - Pillow (para upload de imagens)
 
 ## Como rodar o projeto
@@ -38,19 +38,48 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Execute as migrations
+### 4. Configure o banco de dados PostgreSQL
+
+Crie um banco de dados chamado `carros` no PostgreSQL:
+
+**Windows:**
+```powershell
+psql -U postgres -c "CREATE DATABASE carros;"
+```
+
+**Linux/macOS:**
+```bash
+sudo -u postgres psql -c "CREATE DATABASE carros;"
+```
+
+Edite o arquivo `app/settings.py` com as credenciais do seu banco:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'carros',
+        'USER': 'postgres',
+        'PASSWORD': 'sua-senha',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+### 5. Execute as migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Crie um superusuario (para acessar o admin)
+### 6. Crie um superusuario (para acessar o admin)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Rode o servidor
+### 7. Rode o servidor
 
 ```bash
 python manage.py runserver
