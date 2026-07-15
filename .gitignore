@@ -2,3 +2,5 @@ venv
 cars/__pycache__
 app/__pycache__
 cars/migrations/__pycache__
+db.sqlite3
+media
